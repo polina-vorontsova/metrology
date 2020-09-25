@@ -15,6 +15,9 @@ public class App extends Application {
 
     private static Scene scene;
 
+    String operandRegex = "([$@%]\\w+)|((['\"`](\\w|\\s)*['\"`])|([+-]?\\d+\\.?\\d*))";
+    String operatorRegex = "(<STDIN>)|(((\\w+)(::|(\\(\\))?\\->)?)+((\\()|\\w))|->|=>|<=>|((\\/|\\+\\+?|\\*|--?|>|<|=)=?)|;|!=|\\.|([%@] *{)|(&{1,2})|(\\|{1,2})|(!)";
+
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("form.fxml"));
