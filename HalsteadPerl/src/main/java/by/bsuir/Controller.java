@@ -11,17 +11,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Controller {
 
     private static File codeFile;
-    private static TreeMap<String, Integer> operands, operators;
 
     @FXML
-    private TextArea codeArea;
+    TextArea codeArea;
 
     @FXML
     private TableView<?> operandsTable;
@@ -50,16 +46,9 @@ public class Controller {
     @FXML
     private TextField value;
 
-    public Controller() {
-        operands = new TreeMap<>();
-        operators = new TreeMap<>();
-    }
-
     @FXML
-    void compute() throws IOException {
-        List<String> code = Arrays.asList(codeArea.getText().split("\n"));
-
-        removeComments(code);
+    void compute() {
+        PerlHalstead.compute(Arrays.asList(codeArea.getText().split("\n")), codeArea);
     }
 
     @FXML
@@ -68,32 +57,10 @@ public class Controller {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("perl scripts (*.pl)", "*.pl"));
         codeFile = fileChooser.showOpenDialog(App.getWindow());
-        extractCodeFromFile().forEach(s -> {
-            codeArea.appendText(s + "\n");
-        });
+        extractCodeFromFile().forEach(s -> codeArea.appendText(s + "\n"));
     }
 
     private List<String> extractCodeFromFile() throws IOException {
         return Files.readAllLines(codeFile.toPath());
-    }
-
-    private void removeComments(List<String> code) {
-        for (int i = 0; i < code.size(); i++) {
-            StringBuffer copy = new StringBuffer(code.get(i));
-            Matcher matcher = Pattern.compile("(?<=[\"'`]).+(?=[\"'`])").matcher(copy);
-            while (matcher.find()) {
-                int begin = matcher.start();
-                int end = matcher.end();
-                copy.replace(begin, end, "*".repeat(end - begin));
-            }
-            int pos = copy.indexOf("#");
-            if (pos >= 0) {
-                code.set(i, code.get(i).substring(0, pos));
-            }
-        }
-
-        // development future
-        codeArea.clear();
-        code.forEach(s -> codeArea.appendText(s + "\n"));
     }
 }

@@ -17,10 +17,6 @@ public class App extends Application {
 
     private static Window window;
 
-    String operandRegex = "([$@%]\\w+)|((['\"`](\\w|\\s)*['\"`])|([+-]?\\d+\\.?\\d*))";
-    String operatorRegex =
-            "(<STDIN>)|(((\\w+)(::|(\\(\\))?\\->)?)+((\\()|\\w))|->|=>|<=>|((\\/|\\+\\+?|\\*|--?|>|<|=)=?)|;|!=|\\.|([%@] *{)|(&{1,2})|(\\|{1,2})|(!)";
-
     public static Window getWindow() {
         return window;
     }
