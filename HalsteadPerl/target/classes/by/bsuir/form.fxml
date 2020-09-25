@@ -20,7 +20,7 @@
       <Button layoutX="34.0" layoutY="22.0" mnemonicParsing="false" onAction="#openFile" text="Open file" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="905.0" AnchorPane.topAnchor="40.0" />
       <Label layoutX="27.0" layoutY="14.0" text="PERL ANALYZER" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="10.0" />
       <Button layoutX="15.0" layoutY="84.0" mnemonicParsing="false" onAction="#compute" text="Compute" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="905.0" AnchorPane.topAnchor="80.0" />
-      <TextArea fx:id="codeField" layoutX="138.0" layoutY="28.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="290.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="20.0" />
+      <TextArea fx:id="codeArea" layoutX="138.0" layoutY="28.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="290.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="20.0" />
       <Separator layoutX="245.0" layoutY="132.0" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="0.0" />
       <TableView fx:id="operandsTable" layoutX="125.0" layoutY="323.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="550.0" AnchorPane.topAnchor="320.0">
         <columns>

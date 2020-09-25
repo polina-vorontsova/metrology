@@ -11,12 +11,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Controller {
 
-    static File codeFile;
+    private static File codeFile;
+    private static TreeMap<String, Integer> operands, operators;
 
     @FXML
     private TextArea codeArea;
@@ -48,6 +50,11 @@ public class Controller {
     @FXML
     private TextField value;
 
+    public Controller() {
+        operands = new TreeMap<>();
+        operators = new TreeMap<>();
+    }
+
     @FXML
     void compute() throws IOException {
         List<String> code = Arrays.asList(codeArea.getText().split("\n"));
@@ -77,7 +84,7 @@ public class Controller {
             while (matcher.find()) {
                 int begin = matcher.start();
                 int end = matcher.end();
-                copy.replace(begin,end, "*".repeat(end - begin));
+                copy.replace(begin, end, "*".repeat(end - begin));
             }
             int pos = copy.indexOf("#");
             if (pos >= 0) {
