@@ -3,6 +3,7 @@ package by.bsuir;
 import javafx.scene.control.TextArea;
 
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,23 +15,31 @@ public class PerlHalstead {
             "(<\\w*>)|((\\w+)(::|(\\(\\))?->)((\\w+)(::|(\\(\\))?->))*((\\(\\))|\\w+))|" +
                     //unknown functionality
                     "->|=>|<=>|(=[!~])|([+-]{1,2}|~)|(([<>]{2}|[*&|]{1,2}|[/%+\\-x^.=<>!])=?)|;|(\\$#)";
+
     private static TreeMap<String, Integer> operands;
     private static TreeMap<String, Integer> operators;
 
-    public static TreeMap<String, Integer> operands() {
-        return operands;
-    }
+    private static int operatorsAmount;
+    private static int operandsAmount;
 
-    public static TreeMap<String, Integer> operators() {
-        return operators;
-    }
-
-    public static void compute(List<String> code, TextArea codeArea) {
+    public static Map<String, Integer> compute(List<String> code, TextArea codeArea) {
+        operatorsAmount = operandsAmount = -1;
         operands = new TreeMap<>();
         operators = new TreeMap<>();
         removeComments(code, codeArea);
         recognizeOperators(code, codeArea);
         recognizeOperands(code, codeArea);
+
+        int commonCardinality = operators.size() + operands.size();
+        int commonAmount = calculateOperatorsAmount() + calculateOperandsAmount();
+
+        return Map.of("operatorsCardinality", operators.size(),
+                "operandsCardinality", operands.size(),
+                "operatorsAmount", operatorsAmount,
+                "operandsAmount", operandsAmount,
+                "commonCardinality", commonCardinality,
+                "commonAmount", commonAmount,
+                "value", (int) Math.round(commonAmount * Math.log(commonCardinality) / Math.log(2)));
     }
 
     private static void removeComments(List<String> code, TextArea codeArea) {
@@ -79,5 +88,23 @@ public class PerlHalstead {
         // development future
         codeArea.clear();
         code.forEach(s -> codeArea.appendText(s + "\n"));
+    }
+
+    private static int calculateOperatorsAmount() {
+        int amount = 0;
+        for (Integer one_amount : operators.values()) {
+            amount += one_amount;
+        }
+        operatorsAmount = amount;
+        return operatorsAmount;
+    }
+
+    private static int calculateOperandsAmount() {
+        int amount = 0;
+        for (Integer one_amount : operands.values()) {
+            amount += one_amount;
+        }
+        operandsAmount = amount;
+        return operandsAmount;
     }
 }

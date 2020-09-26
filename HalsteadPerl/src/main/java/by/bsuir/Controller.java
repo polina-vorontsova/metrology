@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
 
@@ -48,7 +49,16 @@ public class Controller {
 
     @FXML
     void compute() {
-        PerlHalstead.compute(Arrays.asList(codeArea.getText().split("\n")), codeArea);
+        Map<String, Integer> resultMap =
+                PerlHalstead.compute(Arrays.asList(codeArea.getText().split("\n")), codeArea);
+
+        operatorsCardinality.setText(resultMap.get("operatorsCardinality").toString());
+        operandsCardinality.setText(resultMap.get("operandsCardinality").toString());
+        operatorsAmount.setText(resultMap.get("operatorsAmount").toString());
+        operandsAmount.setText(resultMap.get("operandsAmount").toString());
+        commonCardinality.setText(resultMap.get("commonCardinality").toString());
+        commonAmount.setText(resultMap.get("commonAmount").toString());
+        value.setText(resultMap.get("value").toString());
     }
 
     @FXML
