@@ -21,8 +21,8 @@ public class App extends Application {
         return window;
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
+    private static Parent loadFXML() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("form.fxml"));
         return fxmlLoader.load();
     }
 
@@ -32,7 +32,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        stage.setScene(new Scene(loadFXML("form.fxml")));
+        stage.setScene(new Scene(loadFXML()));
         stage.getIcons().add(new Image(App.class.getResource("icon.png").toExternalForm()));
         window = stage.getOwner();
         stage.show();

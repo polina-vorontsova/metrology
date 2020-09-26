@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.Controller">
    <children>
       <Separator layoutX="235.0" layoutY="122.0" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="0.0" />
@@ -24,13 +23,13 @@
       <Separator layoutX="245.0" layoutY="132.0" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="0.0" />
       <TableView fx:id="operandsTable" layoutX="125.0" layoutY="323.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="550.0" AnchorPane.topAnchor="320.0">
         <columns>
-          <TableColumn prefWidth="250.0" text="Operand" />
+          <TableColumn prefWidth="235.0" text="Operand" />
           <TableColumn prefWidth="75.0" text="Amount" />
         </columns>
       </TableView>
       <TableView fx:id="operatorsTable" layoutX="463.0" layoutY="320.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="475.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="320.0">
          <columns>
-            <TableColumn prefWidth="250.0" text="Operator" />
+            <TableColumn prefWidth="235.0" text="Operator" />
             <TableColumn prefWidth="75.0" text="Amount" />
          </columns>
       </TableView>

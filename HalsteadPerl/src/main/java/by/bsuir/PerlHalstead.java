@@ -2,9 +2,7 @@ package by.bsuir;
 
 import javafx.scene.control.TextArea;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,16 +14,24 @@ public class PerlHalstead {
                     //unknown functionality
                     "->|=>|<=>|(=[!~])|([+-]{1,2}|~)|(([<>]{2}|[*&|]{1,2}|[/%+\\-x^.=<>!])=?)|;|(\\$#)";
 
-    private static TreeMap<String, Integer> operands;
-    private static TreeMap<String, Integer> operators;
+    private static Set<Pair> operands;
+    private static Set<Pair> operators;
 
     private static int operatorsAmount;
     private static int operandsAmount;
 
+    public static Set<Pair> operands() {
+        return operands;
+    }
+
+    public static Set<Pair> operators() {
+        return operators;
+    }
+
     public static Map<String, Integer> compute(List<String> code, TextArea codeArea) {
         operatorsAmount = operandsAmount = -1;
-        operands = new TreeMap<>();
-        operators = new TreeMap<>();
+        operands = new TreeSet<>();
+        operators = new TreeSet<>();
         removeComments(code, codeArea);
         recognizeOperators(code, codeArea);
         recognizeOperands(code, codeArea);
@@ -63,13 +69,15 @@ public class PerlHalstead {
     }
 
     private static void recognizeOperators(List<String> code, TextArea codeArea) {
+        Map<String, Integer> mapOfOperators = new TreeMap<>();
         for (int i = 0; i < code.size(); i++) {
             Matcher matcher = Pattern.compile(OPERATOR_REGEX).matcher(code.get(i));
             while (matcher.find()) {
-                operators.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
+                mapOfOperators.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
                 code.set(i, code.get(i).replaceFirst(Pattern.quote(matcher.group()), ""));
             }
         }
+        mapOfOperators.forEach((key, value) -> operators.add(new Pair(key, value)));
 
         // development future
         codeArea.clear();
@@ -77,13 +85,15 @@ public class PerlHalstead {
     }
 
     private static void recognizeOperands(List<String> code, TextArea codeArea) {
+        Map<String, Integer> mapOfOperands = new TreeMap<>();
         for (int i = 0; i < code.size(); i++) {
             Matcher matcher = Pattern.compile(OPERAND_REGEX).matcher(code.get(i));
             while (matcher.find()) {
-                operands.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
+                mapOfOperands.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
                 code.set(i, code.get(i).replaceFirst(matcher.group(), ""));
             }
         }
+        mapOfOperands.forEach((key, value) -> operands.add(new Pair(key, value)));
 
         // development future
         codeArea.clear();
@@ -92,8 +102,8 @@ public class PerlHalstead {
 
     private static int calculateOperatorsAmount() {
         int amount = 0;
-        for (Integer one_amount : operators.values()) {
-            amount += one_amount;
+        for (Pair onePair : operators) {
+            amount += onePair.getValue();
         }
         operatorsAmount = amount;
         return operatorsAmount;
@@ -101,8 +111,8 @@ public class PerlHalstead {
 
     private static int calculateOperandsAmount() {
         int amount = 0;
-        for (Integer one_amount : operands.values()) {
-            amount += one_amount;
+        for (Pair onePair : operands) {
+            amount += onePair.getValue();
         }
         operandsAmount = amount;
         return operandsAmount;

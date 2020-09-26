@@ -4,14 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Controller {
 
@@ -21,10 +20,10 @@ public class Controller {
     TextArea codeArea;
 
     @FXML
-    private TableView<?> operandsTable;
+    private TableView<Pair> operandsTable;
 
     @FXML
-    private TableView<?> operatorsTable;
+    private TableView<Pair> operatorsTable;
 
     @FXML
     private TextField operatorsCardinality;
@@ -59,6 +58,14 @@ public class Controller {
         commonCardinality.setText(resultMap.get("commonCardinality").toString());
         commonAmount.setText(resultMap.get("commonAmount").toString());
         value.setText(resultMap.get("value").toString());
+
+        operatorsTable.getItems().addAll(PerlHalstead.operators());
+        operatorsTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("key"));
+        operatorsTable.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("value"));
+
+        operandsTable.getItems().addAll(PerlHalstead.operands());
+        operandsTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("key"));
+        operandsTable.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("value"));
     }
 
     @FXML
