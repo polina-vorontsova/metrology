@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class PerlHalstead {
 
-    private static final String OPERAND_REGEX = "([$@%]\\w+)|((['\"`](\\w|\\s)*['\"`])|([+-]?\\d+\\.?\\d*))";
+    private static final String OPERAND_REGEX = "([$@%]\\w+)|((['\"`].*?(?<!\\\\)['\"`])|([+-]?\\d+\\.?\\d*))";
     private static final String OPERATOR_REGEX =
             "(<\\w*>)|((\\w+)(::|(\\(\\))?->)((\\w+)(::|(\\(\\))?->))*((\\(\\))|\\w+))|" +
                     //unknown functionality
@@ -33,8 +33,8 @@ public class PerlHalstead {
         operands = new TreeSet<>();
         operators = new TreeSet<>();
         removeComments(code, codeArea);
-        recognizeOperators(code, codeArea);
         recognizeOperands(code, codeArea);
+        recognizeOperators(code, codeArea);
 
         int commonCardinality = operators.size() + operands.size();
         int commonAmount = calculateOperatorsAmount() + calculateOperandsAmount();
@@ -68,22 +68,6 @@ public class PerlHalstead {
         code.forEach(s -> codeArea.appendText(s + "\n"));
     }
 
-    private static void recognizeOperators(List<String> code, TextArea codeArea) {
-        Map<String, Integer> mapOfOperators = new TreeMap<>();
-        for (int i = 0; i < code.size(); i++) {
-            Matcher matcher = Pattern.compile(OPERATOR_REGEX).matcher(code.get(i));
-            while (matcher.find()) {
-                mapOfOperators.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
-                code.set(i, code.get(i).replaceFirst(Pattern.quote(matcher.group()), ""));
-            }
-        }
-        mapOfOperators.forEach((key, value) -> operators.add(new Pair(key, value)));
-
-        // development future
-        codeArea.clear();
-        code.forEach(s -> codeArea.appendText(s + "\n"));
-    }
-
     private static void recognizeOperands(List<String> code, TextArea codeArea) {
         Map<String, Integer> mapOfOperands = new TreeMap<>();
         for (int i = 0; i < code.size(); i++) {
@@ -94,6 +78,22 @@ public class PerlHalstead {
             }
         }
         mapOfOperands.forEach((key, value) -> operands.add(new Pair(key, value)));
+
+        // development future
+        codeArea.clear();
+        code.forEach(s -> codeArea.appendText(s + "\n"));
+    }
+
+    private static void recognizeOperators(List<String> code, TextArea codeArea) {
+        Map<String, Integer> mapOfOperators = new TreeMap<>();
+        for (int i = 0; i < code.size(); i++) {
+            Matcher matcher = Pattern.compile(OPERATOR_REGEX).matcher(code.get(i));
+            while (matcher.find()) {
+                mapOfOperators.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
+                code.set(i, code.get(i).replaceFirst(Pattern.quote(matcher.group()), ""));
+            }
+        }
+        mapOfOperators.forEach((key, value) -> operators.add(new Pair(key, value)));
 
         // development future
         codeArea.clear();

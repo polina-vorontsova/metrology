@@ -70,6 +70,8 @@ public class Controller {
 
     @FXML
     void openFile() throws IOException {
+        resetAll();
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("perl scripts (*.pl)", "*.pl"));
@@ -79,5 +81,19 @@ public class Controller {
 
     private List<String> extractCodeFromFile() throws IOException {
         return Files.readAllLines(codeFile.toPath());
+    }
+
+    private void resetAll() {
+        codeArea.clear();
+        operatorsTable.getItems().clear();
+        operandsTable.getItems().clear();
+
+        operatorsCardinality.clear();
+        operandsCardinality.clear();
+        operatorsAmount.clear();
+        operandsAmount.clear();
+        commonCardinality.clear();
+        commonAmount.clear();
+        value.clear();
     }
 }
