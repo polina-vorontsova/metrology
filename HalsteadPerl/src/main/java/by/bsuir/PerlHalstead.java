@@ -63,7 +63,7 @@ public class PerlHalstead {
             }
         }
 
-        // development future
+//        // development future
         codeArea.clear();
         code.forEach(s -> codeArea.appendText(s + "\n"));
     }
@@ -74,7 +74,7 @@ public class PerlHalstead {
             Matcher matcher = Pattern.compile(OPERAND_REGEX).matcher(code.get(i));
             while (matcher.find()) {
                 mapOfOperands.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
-                code.set(i, code.get(i).replaceFirst(matcher.group(), ""));
+                code.set(i, code.get(i).replaceFirst(Pattern.quote(matcher.group()), "\"#\""));
             }
         }
         mapOfOperands.forEach((key, value) -> operands.add(new Pair(key, value)));
@@ -90,7 +90,7 @@ public class PerlHalstead {
             Matcher matcher = Pattern.compile(OPERATOR_REGEX).matcher(code.get(i));
             while (matcher.find()) {
                 mapOfOperators.merge(matcher.group(), 1, (oldValue, newValue) -> oldValue + 1);
-                code.set(i, code.get(i).replaceFirst(Pattern.quote(matcher.group()), ""));
+                code.set(i, code.get(i).replaceFirst(Pattern.quote(matcher.group()), "\"#\""));
             }
         }
         mapOfOperators.forEach((key, value) -> operators.add(new Pair(key, value)));
