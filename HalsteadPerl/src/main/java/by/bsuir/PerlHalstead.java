@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 
 public class PerlHalstead {
 
-    private static final String OPERAND_REGEX = "([$@%]\\w+)|((['\"`].*?(?<!\\\\)['\"`])|([+-]?\\d+\\.?\\d*))";
+    private static final String OPERAND_REGEX =
+            "(([$@%]\\w+)|((['\"`].*?(?<!\\\\)['\"`])|([+-]?\\d+\\.?\\d*)))|" +
+                    "((?<=\\W|^)(__(LINE|FILE|END|DATA)__)(?=\\W|$))";
     private static final String OPERATOR_REGEX =
             "(<\\w*>)|((\\w+)(::|(\\(\\))?->)((\\w+)(::|(\\(\\))?->))*((\\(\\))|\\w+))|" +
                     //unknown functionality

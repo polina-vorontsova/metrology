@@ -70,13 +70,15 @@ public class Controller {
 
     @FXML
     void openFile() throws IOException {
-        resetAll();
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("perl scripts (*.pl)", "*.pl"));
-        codeFile = fileChooser.showOpenDialog(App.getWindow());
-        extractCodeFromFile().forEach(s -> codeArea.appendText(s + "\n"));
+        File toOpen = fileChooser.showOpenDialog(App.getWindow());
+        if (toOpen != null) {
+            codeFile = toOpen;
+            resetAll();
+            extractCodeFromFile().forEach(s -> codeArea.appendText(s + "\n"));
+        }
     }
 
     private List<String> extractCodeFromFile() throws IOException {
