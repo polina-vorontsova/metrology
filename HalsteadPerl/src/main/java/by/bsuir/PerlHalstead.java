@@ -2,6 +2,10 @@ package by.bsuir;
 
 import javafx.scene.control.TextArea;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,10 +18,11 @@ public class PerlHalstead {
     private static final String OPERATOR_REGEX =
             "(<\\w*>)|((\\w+)(::|(\\(\\))?->)((\\w+)(::|(\\(\\))?->))*((\\(\\))|\\w+))|" +
                     //unknown functionality
-                    "->|=>|<=>|(=[!~])|([+-]{1,2}|~)|(([<>]{2}|[*&|]{1,2}|[/%+\\-x^.=<>!])=?)|;|(\\$#)";
-
+                    "->|=>|<=>|(=[!~])|([+-]{1,2}|~)|(([<>]{2}|[*&|]{1,2}|[/%+\\-^.=<>!])=?)|;|(\\$#)";
+    private static File functionsFile;
     private static Set<Pair> operands;
     private static Set<Pair> operators;
+    private static Set<String> functions;
 
     private static int operatorsAmount;
     private static int operandsAmount;
@@ -32,10 +37,24 @@ public class PerlHalstead {
 
     public static Map<String, Integer> compute(List<String> code, TextArea codeArea) {
         operatorsAmount = operandsAmount = -1;
+        functionsFile = null;
+
         operands = new TreeSet<>();
         operators = new TreeSet<>();
+        functions = new HashSet<>();
+        functionsFile = new File("default_functions.txt");
+        if (functionsFile.exists()) {
+            try {
+                addFunctionsFromFile(functions, functionsFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        addUserFunctions(functions, code);
+
         removeComments(code, codeArea);
         recognizeOperands(code, codeArea);
+        recognizeFunctions(functions, code, codeArea);
         recognizeOperators(code, codeArea);
 
         int commonCardinality = operators.size() + operands.size();
@@ -100,6 +119,51 @@ public class PerlHalstead {
         // development future
         codeArea.clear();
         code.forEach(s -> codeArea.appendText(s + "\n"));
+    }
+
+    private static void addFunctionsFromFile(Set<String> functions, File functionsFile) throws IOException {
+        List<String> functionsList = Files.readAllLines(Path.of(functionsFile.getPath()));
+        for (int i = 0; i < functionsList.size(); i++) {
+            functionsList.set(i, functionsList.get(i).trim());
+        }
+        functions.addAll(functionsList);
+    }
+
+    private static void addUserFunctions(Set<String> functions, List<String> code) {
+        String compressedCode = compressCode(code);
+        Matcher matcher = Pattern.compile("(?<=(\\W|^)sub)\\s+\\w+(?=\\W)").matcher(compressedCode);
+        while (matcher.find()) {
+            functions.add(matcher.group().stripLeading());
+        }
+    }
+
+    private static void recognizeFunctions(Set<String> functions, List<String> code, TextArea codeArea) {
+        Map<String, Integer> mapOfOFunctions = new HashMap<>();
+        String compressedCode = compressCode(code).replaceAll("\\s+", " ").
+                replaceAll("(?<=\\W|^)sub\\s", "sub");
+        for (String oneFunction : functions) {
+            Matcher matcher = Pattern.compile(String.format("(?<=\\s|^)%s(?=\\W|$)",
+                    Pattern.quote(oneFunction))).matcher(compressedCode);
+            while (matcher.find()) {
+                mapOfOFunctions.merge(matcher.group().stripLeading(),
+                        1, (oldValue, newValue) -> oldValue + 1);
+                compressedCode = compressedCode.replaceFirst(Pattern.quote(matcher.group().stripLeading()),
+                        "\"#\"");
+            }
+        }
+        mapOfOFunctions.forEach((key, value) -> operators.add(new Pair(key, value)));
+
+        // development future
+        codeArea.clear();
+        code.forEach(s -> codeArea.appendText(s + "\n"));
+    }
+
+    private static String compressCode(List<String> code) {
+        StringBuilder builder = new StringBuilder();
+        for (String line : code) {
+            builder.append(line);
+        }
+        return builder.toString();
     }
 
     private static int calculateOperatorsAmount() {
