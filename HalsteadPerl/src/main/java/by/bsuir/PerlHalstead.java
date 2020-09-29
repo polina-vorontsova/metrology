@@ -18,7 +18,7 @@ public class PerlHalstead {
     private static final String OPERATOR_REGEX =
             "(<\\w*>)|((\\w+)(::|(\\(\\))?->)((\\w+)(::|(\\(\\))?->))*((\\(\\))|\\w+))|" +
                     //unknown functionality
-                    "->|=>|<=>|(=[!~])|([+-]{1,2}|~)|(([<>]{2}|[*&|]{1,2}|[/%+\\-^.=<>!])=?)|;|(\\$#)";
+                    "->|=>|<=>|(=[!~])|([+-]{1,2}|~)|(([<>]{2}|[*&|]{1,2}|[/%+\\-^x.=<>!])=?)|;|(\\$#)";
     private static File functionsFile;
     private static Set<Pair> operands;
     private static Set<Pair> operators;
